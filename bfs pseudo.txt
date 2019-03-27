@@ -1,0 +1,18 @@
+#useful website http://tristanpenman.com/demos/n-puzzle/
+
+
+
+done = False
+openList = []
+closedList = []
+
+temp = board
+
+while Not Done
+	if(temp == Board.completedBoard):
+		Done = True
+	else:
+		closedList += temp
+		openList += temp.CalculateChildren()
+		openList = [x for x in openList if x not in closedList] #removes lists that have moves already done
+		temp = openList.pop(0)
