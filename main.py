@@ -1,3 +1,8 @@
-from gamestate import *
+from board import Board
 
-print(is_won(board))
+b = Board()
+
+b.print()
+c = b.calculate_child_states()
+for x in c:
+    x.print()
