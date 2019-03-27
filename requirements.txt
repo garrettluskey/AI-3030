@@ -1,3 +1,0 @@
-kivy
-kivy.deps.glew
-kivy.deps.sdl2
