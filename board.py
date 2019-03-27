@@ -8,6 +8,17 @@ class Board:
             self.board = [[1, 2, 3], [4, 0, 5], [6, 7, 8]]
             self.scramble()
 
+    def __str__(self):
+        output = ""
+        for x in self.board:
+            for y in x:
+                if y == 0:
+                    output += ' ' + ' '
+                else:
+                    output += str(y) + ' '
+            output += '\n'
+        return output
+
     def scramble(self):
         for i in range(random.randint(0, 100)):
             try:
@@ -97,15 +108,3 @@ class Board:
             except RuntimeWarning:
                 pass
         return children
-
-    def print(self):
-        output = ""
-        for x in self.board:
-            for y in x:
-                if y == 0:
-                    output += ' ' + ' '
-                else:
-                    output += str(y) + ' '
-            output += '\n'
-
-        print(output)
