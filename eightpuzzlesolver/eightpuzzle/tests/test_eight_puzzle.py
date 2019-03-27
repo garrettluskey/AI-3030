@@ -1,5 +1,5 @@
 import unittest
-from .. import EightPuzzle
+from eightpuzzle import EightPuzzle
 import os
 
 
