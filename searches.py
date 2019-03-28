@@ -8,7 +8,6 @@ def greedy_search(initial_state):
     queue.put(HeuristicNode(calculate_heuristic_value(initial_state.board), initial_state))
     while not queue.empty():
         currentNode = queue.get()
-        print(currentNode.item)
         if currentNode.item.board in visited:
             continue
         visited.append(currentNode.item.board)
