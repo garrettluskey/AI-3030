@@ -22,6 +22,25 @@ def greedy_search(initial_state):
                 queue.put(HeuristicNode(calculate_heuristic_value(child_state.board), child_state, currentNode))
     raise Exception("ouch")
 
+def bfs(initial_state):
+
+    done = False
+    openList = []
+    closedList = []
+    temp = initial_state
+
+    while not done:
+        if(temp.board == Board.completed_board):
+            closedList.append(temp)
+            return closedList
+        else:
+            closedList.append(temp)
+            for x in temp.calculate_child_states():
+                openList.append(x)
+            openList = [x for x in openList if x not in closedList] #removes lists that have moves already done
+            temp = openList.pop(0)
+
+
 class HeuristicNode:
     def __init__(self, heuristic, item, parent=None):
         self.heuristic = heuristic
@@ -45,3 +64,4 @@ def calculate_heuristic_value(board):
             goaly = floor((val - 1) / 3)
             heuristic_sum += sqrt((goalx - x)**2 + (goaly - y)**2) # distance from goal state
     return heuristic_sum
+
