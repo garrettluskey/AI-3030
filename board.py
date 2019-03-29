@@ -1,7 +1,12 @@
-import random, copy
+import random
+import copy
+from os import linesep
+
+
 class Board:
+    completed_board = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+
     def __init__(self, board=None):
-        Board.completed_board = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
         if board:
             self.board = copy.deepcopy(board)
         else:
@@ -13,16 +18,16 @@ class Board:
         for x in self.board:
             for y in x:
                 if y == 0:
-                    output += ' ' + ' '
+                    output += '  '
                 else:
                     output += str(y) + ' '
-            output += '\n'
+            output += linesep
         return output
 
     def scramble(self):
         for i in range(random.randint(0, 100)):
             try:
-                choice = random.randint(1,4)
+                choice = random.randint(1, 4)
                 if choice == 1:
                     self.move_up()
                 elif choice == 2:
@@ -71,16 +76,15 @@ class Board:
         for i, x in enumerate(self.board):
             for j, y in enumerate(x):
                 if y == 0:
-                    return (i, j)
+                    return i, j
 
     def num_misplaced(self):
         count = 0
         for i, x in enumerate(self.board):
             for j in range(len(x)):
-                if(self.board[i][j] != Board.completed_board[i][j]):
+                if self.board[i][j] != Board.completed_board[i][j]:
                     count += 1
         return count
-
 
     def is_won(self):
         if self.board == Board.completed_board:
@@ -90,7 +94,7 @@ class Board:
 
     def calculate_child_states(self):
         children = []
-        for choice in range(1,5):
+        for choice in range(1, 5):
             try:
                 if choice == 1:
                     child = Board(board=self.board)
@@ -104,6 +108,8 @@ class Board:
                 elif choice == 4:
                     child = Board(board=self.board)
                     child.move_right()
+                else:
+                    continue
                 children.append(child)
             except RuntimeWarning:
                 pass

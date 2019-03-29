@@ -1,10 +1,9 @@
 from board import Board
-from searches import greedy_search, calculate_heuristic_value, bfs
+from searches import greedy_search, a_star_search, bfs
 
-#for x in greedy_search(Board(board=[[1,0,3], [4,5,6], [7,8,2]])):
- #   print(x)
-
-
-bfs(Board(board=[[0,2,3], [4,5,3], [7,8,1]]))
-# for x in bfs(Board(board=[[1,2,3], [4,5,3], [7,8,6]])):
-#     print(x)
+print("a_star_search")
+print("moves: {0}".format(len(a_star_search(Board(board=[[5, 1, 3], [4, 2, 6], [7, 8, 0]])))))
+print("greedy_search")
+print("moves: {0}".format(len(greedy_search(Board(board=[[5, 1, 3], [4, 2, 6], [7, 8, 0]])))))
+print("bfs")
+print("moves: {0}".format(len(bfs(Board(board=[[5, 1, 3], [4, 2, 6], [7, 8, 0]])))))
