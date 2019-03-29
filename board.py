@@ -1,82 +1,132 @@
 import random
 import copy
-from os import linesep
+import os
+import math
 
 
 class Board:
+    __BOARD_WIDTH = 3
+    __BOARD_HEIGHT = 3
+    __SCRAMBLE_ITERATIONS = 1000
     completed_board = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
 
     def __init__(self, board=None):
-        if board:
-            self.board = copy.deepcopy(board)
-        else:
-            self.board = [[1, 2, 3], [4, 0, 5], [6, 7, 8]]
-            self.scramble()
+        if not board:
+            self.board = self.completed_board
+            return
+        if not self.__check_board_valid(board):
+            raise ValueError("The given board is not valid")
+        self.board = copy.deepcopy(board)
+        if not self.__is_solvable():
+            raise ValueError("The given board is not solvable")
 
     def __str__(self):
-        output = ""
-        for x in self.board:
-            for y in x:
-                if y == 0:
-                    output += '  '
-                else:
-                    output += str(y) + ' '
-            output += linesep
-        return output
+        value = ""
+        for y in range(self.__BOARD_HEIGHT):
+            for x in range(self.__BOARD_WIDTH):
+                value += str(self.board[y][x]) if self.board[y][x] else " "
+                if x != self.__BOARD_WIDTH - 1:
+                    value += " "
+            if y != self.__BOARD_HEIGHT - 1:
+                value += os.linesep
+        return value
+
+    def __check_board_valid(self, board):
+        # check if board is list and is the proper width
+        if type(board) != list or len(board) != self.__BOARD_HEIGHT:
+            return False
+        # create an empty list to contain the flattened elements of the board
+        elements = []
+        for y in range(self.__BOARD_HEIGHT):
+            # check each sub element of the board is a list and is the proper height
+            if type(board[y]) != list or len(board[y]) != self.__BOARD_WIDTH:
+                return False
+            for x in range(self.__BOARD_WIDTH):
+                # check each element in the board is an integer
+                if type(board[y][x]) != int:
+                    return False
+                # append element to flattened element list
+                elements.append(board[y][x])
+        # check that the elements are 0 through width * height
+        elements.sort()
+        if elements != list(range(self.__BOARD_HEIGHT * self.__BOARD_WIDTH)):
+            return False
+        return True
+
+    def __count_inversions(self):
+        inversion_count = 0
+        for i in range(self.__BOARD_WIDTH * self.__BOARD_HEIGHT - 1):
+            for j in range(i + 1, self.__BOARD_WIDTH * self.__BOARD_HEIGHT):
+                current_value = self.board[math.floor(i / self.__BOARD_HEIGHT)][i % self.__BOARD_WIDTH]
+                preceding_value = self.board[math.floor(j / self.__BOARD_HEIGHT)][j % self.__BOARD_WIDTH]
+                if current_value > 0 and 0 < preceding_value < current_value:
+                        inversion_count += 1
+        return inversion_count
+
+    def __is_solvable(self):
+        return self.__count_inversions() % 2 == 0
 
     def scramble(self):
-        for i in range(random.randint(0, 100)):
-            try:
-                choice = random.randint(1, 4)
-                if choice == 1:
-                    self.move_up()
-                elif choice == 2:
-                    self.move_down()
-                elif choice == 3:
-                    self.move_left()
-                elif choice == 4:
-                    self.move_right()
-            except RuntimeWarning:
-                i += 1
+        for x in range(self.__SCRAMBLE_ITERATIONS):
+            self.board = random.choice(self.calculate_child_states()).board
 
-    def move_up(self):
-        i, j = self._find_cursor()
-        if i == 0:
-            raise RuntimeWarning("Cursor at top")
+    def get_current_state(self):
+        return copy.deepcopy(self.board)
+
+    def move_up(self, cursor=None):
+        if cursor:
+            x, y = cursor
         else:
-            self._swap(i, j, i - 1, j)
+            x, y = self.__find_cursor()
+        if y == self.__BOARD_HEIGHT - 1:
+            return None
+        board = self.get_current_state()
+        board[y][x] = board[y + 1][x]
+        board[y + 1][x] = 0
+        return Board(board)
 
-    def move_down(self):
-        i, j = self._find_cursor()
-        if i == 2:
-            raise RuntimeWarning("Cursor at bottom")
+    def move_down(self, cursor=None):
+        if cursor:
+            x, y = cursor
         else:
-            self._swap(i, j, i + 1, j)
+            x, y = self.__find_cursor()
+        if y == 0:
+            return None
+        board = self.get_current_state()
+        board[y][x] = board[y - 1][x]
+        board[y - 1][x] = 0
+        return Board(board)
 
-    def move_left(self):
-        i, j = self._find_cursor()
-        if j == 0:
-            raise RuntimeWarning("Cursor at left wall")
+    def move_left(self, cursor=None):
+        if cursor:
+            x, y = cursor
         else:
-            self._swap(i, j, i, j - 1)
+            x, y = self.__find_cursor()
+        if x == self.__BOARD_WIDTH - 1:
+            return None
+        board = self.get_current_state()
+        board[y][x] = board[y][x + 1]
+        board[y][x + 1] = 0
+        return Board(board)
 
-    def move_right(self):
-        i, j = self._find_cursor()
-        if j == 2:
-            raise RuntimeWarning("Cursor at right wall")
+    def move_right(self, cursor=None):
+        if cursor:
+            x, y = cursor
         else:
-            self._swap(i, j, i, j + 1)
+            x, y = self.__find_cursor()
+        if x == 0:
+            return None
+        board = self.get_current_state()
+        board[y][x] = board[y][x - 1]
+        board[y][x - 1] = 0
+        return Board(board)
 
-    def _swap(self, first_width, first_height, second_width, second_height):
-        tmp = self.board[first_width][first_height]
-        self.board[first_width][first_height] = self.board[second_width][second_height]
-        self.board[second_width][second_height] = tmp
-
-    def _find_cursor(self):
-        for i, x in enumerate(self.board):
-            for j, y in enumerate(x):
-                if y == 0:
-                    return i, j
+    def __find_cursor(self):
+        for y in range(self.__BOARD_HEIGHT):
+            for x in range(self.__BOARD_WIDTH):
+                if self.board[y][x] == 0:
+                    return x, y
+        return None
 
     def num_misplaced(self):
         count = 0
@@ -93,24 +143,8 @@ class Board:
             return False
 
     def calculate_child_states(self):
-        children = []
-        for choice in range(1, 5):
-            try:
-                if choice == 1:
-                    child = Board(board=self.board)
-                    child.move_up()
-                elif choice == 2:
-                    child = Board(board=self.board)
-                    child.move_down()
-                elif choice == 3:
-                    child = Board(board=self.board)
-                    child.move_left()
-                elif choice == 4:
-                    child = Board(board=self.board)
-                    child.move_right()
-                else:
-                    continue
-                children.append(child)
-            except RuntimeWarning:
-                pass
-        return children
+        cursor = self.__find_cursor()
+        return list(filter(None, [self.move_up(cursor),
+                                  self.move_down(cursor),
+                                  self.move_left(cursor),
+                                  self.move_right(cursor)]))
