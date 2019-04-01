@@ -5,10 +5,16 @@ import math
 
 
 class Board:
-    '''Board State Class
-       This class stores the state of a 8-puzzle by using
-       a 2d array to store the state of the game and having
-       methods to manipulate the array.
+    '''
+    Board State Class
+
+    This class stores the state of a 8-puzzle by using
+    a 2d array to store the state of the game and having
+    methods to manipulate the array.
+
+    Args:
+        board (2d list): ex [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+            if not given a random board will be generated    
     '''
     __BOARD_WIDTH = 3
     __BOARD_HEIGHT = 3
