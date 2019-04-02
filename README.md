@@ -17,7 +17,11 @@ pip install -r requirements.txt
 ### Running the project
 
 ```
-python main.py
+python gui_main.py
+```
+or
+```
+python cli_main.py
 ```
 
 ## Running the tests
