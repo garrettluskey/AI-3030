@@ -26,6 +26,26 @@ def bfs(initial_state, timeout=30):
         print(x)
 
 
+def bfs2(initial_state):
+    queue = []
+    visited = []
+    queue.append(NodeiestNode(initial_state))
+    while queue:
+        current_node = queue.pop(0)
+        if current_node.item.board in visited:
+            continue
+        visited.append(current_node.item.board)
+        if current_node.item.board == Board.completed_board:
+            path = []
+            while current_node:
+                path.insert(0, current_node.item)
+                current_node = current_node.parent
+            return path
+        for child_state in current_node.item.calculate_child_states():
+            queue.append(NodeiestNode(child_state, current_node))
+    return []
+
+
 def greedy_search(initial_state):
     queue = []
     visited = []
@@ -93,6 +113,12 @@ class HeuristicNode:
 
     def __lt__(self, heuristic_node):
         return self.heuristic < heuristic_node.heuristic
+
+
+class NodeiestNode:
+    def __init__(self, item, parent=None):
+        self.item = item
+        self.parent = parent
 
 
 def calculate_heuristic_value(board):

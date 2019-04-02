@@ -1,7 +1,8 @@
 from timeit import default_timer as timer
 from board import Board
-from searches import a_star_search, greedy_search, bfs
+from searches import a_star_search, greedy_search, bfs, bfs2
 from os import linesep
+
 
 class CLI:
     help_str = linesep.join(["q: quit", "b: print board", "g: print goal state", "scb: scramble board",
@@ -63,7 +64,7 @@ class CLI:
         elif self.current_solver_id == self.greedy_id:
             solver = greedy_search
         elif self.current_solver_id == self.breadth_first_id:
-            solver = bfs
+            solver = bfs2
         else:
             return
         start = timer()
