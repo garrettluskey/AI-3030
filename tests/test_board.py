@@ -81,10 +81,10 @@ class TestBoard(unittest.TestCase):
 
     def test_move_left(self):
         state = [[4, 1, 3], [2, 0, 6], [5, 8, 7]]
-        left = [[4, 1, 3], [2, 6, 0], [5, 8, 7]]
+        left = [[4, 1, 3], [0, 2, 6], [5, 8, 7]]
         self.assertListEqual(Board(state).move_left().get_current_state(), left)
 
     def test_move_right(self):
         state = [[4, 1, 3], [2, 0, 6], [5, 8, 7]]
-        right = [[4, 1, 3], [0, 2, 6], [5, 8, 7]]
+        right = [[4, 1, 3], [2, 6, 0], [5, 8, 7]]
         self.assertListEqual(Board(state).move_right().get_current_state(), right)
