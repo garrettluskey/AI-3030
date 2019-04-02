@@ -9,7 +9,6 @@ This project will solve 8-Digit puzzles using various search techniques.
 You will need to first have python and git installed.
 
 ```
-git clone https://github.com/garrettluskey/AI-3030
 cd AI-3030
 pip install -r requirements.txt
 ```
