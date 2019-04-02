@@ -26,7 +26,7 @@ class Board:
            If no board is given, the constuctor will create a random board
         '''
         if not board:
-            self.board = self.completed_board
+            self.board = copy.deepcopy(self.completed_board)
             return
         if not self.__check_board_valid(board):
             raise ValueError("The given board is not valid")
