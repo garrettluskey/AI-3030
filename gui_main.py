@@ -53,6 +53,7 @@ class TestApp(App):
     def generate_random(self, instance):
         if self.solver_thread and self.solver_thread.is_alive():
             print("Can't. Still solving.")
+            return
         while len(self.animation_frames) != 0:
             self.animation_frames.pop().cancel()
         self.animation_frames = []
