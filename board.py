@@ -45,6 +45,12 @@ class Board:
                 value += os.linesep
         return value
 
+    def get_board_width(self):
+        return self.__BOARD_WIDTH
+
+    def get_board_height(self):
+        return self.__BOARD_HEIGHT
+
     def __check_board_valid(self, board):
         ''' Verifies if given board is valid.
             Returns true if board is valid, false if not.
